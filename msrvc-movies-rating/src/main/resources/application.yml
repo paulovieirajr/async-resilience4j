@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: msrvc-movies-rating
+
+server:
+  port: 8084
+  servlet:
+    context-path: /movies-rating
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+      base-path: /
+      path-mapping:
+        health: health
+  endpoint:
+    health:
+      show-details: never

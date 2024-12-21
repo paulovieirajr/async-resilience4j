@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: msrvc-users-movies
+
+server:
+  port: 8083
+  servlet:
+      context-path: /users-movies
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+      base-path: /
+      path-mapping:
+        health: health
+  endpoint:
+    health:
+      show-details: never
+
+# Resilience4j
+resilience4j:
+  retry:
+    instances:
+      moviesServiceRetry:
+        maxAttempts: 3
+        waitDuration: 100ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - feign.RetryableException
+          - feign.FeignException$FeignServerException
+        ignoreExceptions:
+          - feign.FeignException$FeignClientException
