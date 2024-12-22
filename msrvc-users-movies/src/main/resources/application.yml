@@ -9,23 +9,29 @@ server:
 
 # Actuator
 management:
+  security:
+    enabled:false
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: "ALWAYS"
   endpoints:
     web:
       exposure:
         include: "*"
-      base-path: /
-      path-mapping:
-        health: health
-  endpoint:
-    health:
-      show-details: always
 
 # Resilience4j
-resilience4j.retry:
+resilience4j:
+
+  # Retry
+  retry:
+    retryAspectOrder: 2
     instances:
       movieServiceRetry:
         maxAttempts: 3
-        waitDuration: 5s
+        waitDuration: 500ms
 #        enableExponentialBackoff: true
 #        exponentialBackoffMultiplier: 2
         retryExceptions:
@@ -35,9 +41,20 @@ resilience4j.retry:
         ignoreExceptions:
           - feign.FeignException$FeignClientException  # Erros do cliente (4xx)
 
+  # Circuit Breaker
+  circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    instances:
+      movieServiceCb:
+          registerHealthIndicator: true
+          slidingWindowSize: 6
+          minimumNumberOfCalls: 3
+          permittedNumberOfFailuresInHalfOpenState: 3
+          waitDurationInOpenState: 60s
+          failureRateThreshold: 50
+          eventConsumerBufferSize: 10
 
 # Feign
-
 feign:
   client:
     config:
