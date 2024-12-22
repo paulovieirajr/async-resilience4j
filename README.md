@@ -32,7 +32,7 @@ Observe the logs on the console related to Retry and Circuit Breaker.
 
 For Retry, at maximum 3 attempts will be made. 
 
-Circuit Breaker was set up: 
+Circuit Breaker properties: 
 ```
 slidingWindowSize: 6
 minimumNumberOfCalls: 3
@@ -46,6 +46,6 @@ Check with actuator to see the behavior of Circuit Breaker:
 http://localhost:8083/users-movies/actuator/circuitbreakers
 ```
 
-To see the correct behavior, just run up the other microservice and test it out again.
+To see the correct behavior between the two microservices, just run up the other microservice and test it out again.
 
 Check it out: [Resilience4j Documentation for Spring Boot](https://resilience4j.readme.io/docs/getting-started-3#aspect-order) 
