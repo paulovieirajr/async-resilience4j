@@ -5,7 +5,7 @@ spring:
 server:
   port: 8083
   servlet:
-      context-path: /users-movies
+    context-path: /users-movies
 
 # Actuator
 management:
@@ -22,15 +22,35 @@ management:
 
 # Resilience4j
 resilience4j:
+  circuitbreaker:
+    instances:
+      movieService:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
   retry:
     instances:
-      moviesServiceRetry:
-        maxAttempts: 3
-        waitDuration: 100ms
-        enableExponentialBackoff: true
-        exponentialBackoffMultiplier: 2
-        retryExceptions:
-          - feign.RetryableException
-          - feign.FeignException$FeignServerException
-        ignoreExceptions:
-          - feign.FeignException$FeignClientException
+      movieService:
+        maxRetryAttempts: 25
+        waitDuration: 10s
+
+
+# Feign
+
+feign:
+  client:
+    config:
+      msrvc-movies:
+        connection-timeout: 5000
+        read-timeout: 5000
+
+msrvc:
+  movies:
+    url: localhost:8084/movies-rating
