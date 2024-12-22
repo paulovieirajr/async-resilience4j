@@ -30,7 +30,8 @@ public class MovieFeignService {
 
     public MovieResponse getMoviesForUserFallback(Long userId, FeignException e) {
         ATTEMPTS = 1;
-        LOGGER.error("[MOVIES] Fallback method called for userId: {}", userId, e);
+        LOGGER.error("[MOVIES] Service has failed. Fallback method called for userId: {}", userId, e);
+        LOGGER.error("[MOVIES] Movie service is unavailable. Returning an empty list of movies.");
         return new MovieResponse(true, List.of());
     }
 }

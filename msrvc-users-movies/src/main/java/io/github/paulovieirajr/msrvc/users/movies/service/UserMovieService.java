@@ -12,11 +12,11 @@ public class UserMovieService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserMovieService.class.getName());
 
-    private final MovieFeignService movieFeignService;
+    private final MovieAsyncService movieAsyncService;
     private final UserRepository userRepository;
 
-    public UserMovieService(MovieFeignService movieFeignService, UserRepository userRepository) {
-        this.movieFeignService = movieFeignService;
+    public UserMovieService(MovieAsyncService movieAsyncService, UserRepository userRepository) {
+        this.movieAsyncService = movieAsyncService;
         this.userRepository = userRepository;
     }
 
@@ -27,7 +27,7 @@ public class UserMovieService {
             return null;
         }
 
-        MovieResponse movies = movieFeignService.getMoviesForUser(userId);
+        MovieResponse movies = movieAsyncService.getMoviesForUser(userId).join();
         return UserResponse.fromUser(user, movies);
     }
 }
