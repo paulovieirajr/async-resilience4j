@@ -12,34 +12,28 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health"
+        include: "*"
       base-path: /
       path-mapping:
         health: health
   endpoint:
     health:
-      show-details: never
+      show-details: always
 
 # Resilience4j
-resilience4j:
-  circuitbreaker:
+resilience4j.retry:
     instances:
-      movieService:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: COUNT_BASED
-
-  retry:
-    instances:
-      movieService:
-        maxRetryAttempts: 25
-        waitDuration: 10s
+      movieServiceRetry:
+        maxAttempts: 3
+        waitDuration: 5s
+#        enableExponentialBackoff: true
+#        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - feign.RetryableException
+          - java.net.ConnectException  # Conexões recusadas (Connection Refused)
+          - feign.FeignException$FeignServerException  # Erros do servidor (500s)
+        ignoreExceptions:
+          - feign.FeignException$FeignClientException  # Erros do cliente (4xx)
 
 
 # Feign

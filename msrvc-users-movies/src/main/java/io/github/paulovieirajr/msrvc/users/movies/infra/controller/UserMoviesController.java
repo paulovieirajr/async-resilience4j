@@ -22,11 +22,10 @@ public class UserMoviesController {
 
     @GetMapping("/search")
     public ResponseEntity<UserResponse> getUserMovies(@RequestParam Long userId) {
-        LOGGER.info("[USERS] Endpoint /users/movies called for user: {}", userId);
+        LOGGER.info("[USERS] Endpoint [users/movies/search] called for userId: {}", userId);
         var userMovies = userMovieService.getUserMovies(userId);
-        if (userMovies == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(userMovies);
+        return userMovies == null
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(userMovies);
     }
 }

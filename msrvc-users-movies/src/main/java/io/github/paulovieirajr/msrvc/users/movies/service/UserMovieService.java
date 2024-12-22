@@ -1,13 +1,11 @@
 package io.github.paulovieirajr.msrvc.users.movies.service;
 
-import io.github.paulovieirajr.msrvc.movies.rating.model.Movie;
+import io.github.paulovieirajr.msrvc.movies.rating.model.MovieResponse;
 import io.github.paulovieirajr.msrvc.users.movies.dto.UserResponse;
 import io.github.paulovieirajr.msrvc.users.movies.infra.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserMovieService {
@@ -25,14 +23,11 @@ public class UserMovieService {
     public UserResponse getUserMovies(Long userId) {
         var user = userRepository.findById(userId);
         if (user == null) {
-            LOGGER.error("[USERS] User not found: {}", userId);
+            LOGGER.error("[USERS] User not found on the database with id: {}", userId);
             return null;
         }
 
-        // Chama o serviço de filmes e aguarda o resultado
-        List<Movie> movies = movieFeignService.getMoviesForUser(userId);
-
-        // Retorna a resposta do usuário com os filmes
+        MovieResponse movies = movieFeignService.getMoviesForUser(userId);
         return UserResponse.fromUser(user, movies);
     }
 }

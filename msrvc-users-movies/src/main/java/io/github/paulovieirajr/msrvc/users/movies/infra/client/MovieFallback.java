@@ -1,13 +1,13 @@
 package io.github.paulovieirajr.msrvc.users.movies.infra.client;
 
-import io.github.paulovieirajr.msrvc.movies.rating.model.Movie;
+import io.github.paulovieirajr.msrvc.movies.rating.model.MovieResponse;
 
 import java.util.List;
 
 public class MovieFallback implements MovieClient {
 
     @Override
-    public List<Movie> getMoviesForUser(Long userId) {
-        return List.of();
+    public MovieResponse getMoviesForUser(Long userId) {
+        return new MovieResponse(true, List.of());
     }
 }

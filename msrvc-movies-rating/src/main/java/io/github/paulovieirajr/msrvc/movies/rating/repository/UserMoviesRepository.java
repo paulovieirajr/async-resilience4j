@@ -1,6 +1,7 @@
 package io.github.paulovieirajr.msrvc.movies.rating.repository;
 
 import io.github.paulovieirajr.msrvc.movies.rating.model.Movie;
+import io.github.paulovieirajr.msrvc.movies.rating.model.MovieResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,8 +17,8 @@ public class UserMoviesRepository {
         generateUserMovies();
     }
 
-    public List<Movie> getUserMovies(Long userId) {
-        return userMovies.get(userId);
+    public MovieResponse getUserMovies(Long userId) {
+        return new MovieResponse(null, userMovies.get(userId));
     }
 
 
